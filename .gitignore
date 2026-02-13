@@ -1,0 +1,19 @@
+# Maven
+target/
+
+# Local recovery/decompile workspace
+tmp/
+
+# Generated diagrams/output
+docs/
+*.puml
+*.png
+
+# IDE/editor files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
