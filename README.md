@@ -1,6 +1,6 @@
 # PlantUML AOP Bundle
 
-`plantuml-aop-bundle` is a Spring AOP library that generates PlantUML diagrams from annotated method executions.
+`plantuml-aop` is a Spring AOP library that generates PlantUML diagrams from annotated method executions.
 
 It supports:
 - Sequence diagrams
@@ -29,15 +29,29 @@ It supports:
 mvn clean install
 ```
 
+### 1b) Build a lite (thin) jar
+
+Use the `lite` profile to skip shading and produce a thin jar:
+
+```bash
+mvn -Plite clean package
+```
+
+This creates the normal thin jar in `target/` without bundling/relocating dependencies.
+
 ### 2) Add dependency to your app
 
 ```xml
 <dependency>
   <groupId>com.virtrics.ai</groupId>
-  <artifactId>plantuml-aop-bundle</artifactId>
+  <artifactId>plantuml-aop</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
+
+Default (non-lite) packaging produces:
+- thin jar: `plantuml-aop-<version>.jar`
+- shaded/fat jar: `plantuml-aop-<version>-bundle.jar`
 
 ## Using the Library
 
@@ -110,3 +124,41 @@ Class diagram:
 - This project also includes integration tests showing:
   - 2 sequence + 2 class diagrams generated from annotated methods
   - no files generated for unannotated methods
+
+## CI/CD
+
+This repo includes:
+- `.github/workflows/ci-publish.yml`
+  - workflow lint (`actionlint`)
+  - `spotless:check`
+  - build/test on PRs to `main`
+  - mutation testing (PIT)
+  - build/test + publish to GitHub Packages on pushes to `main`
+  - nightly run
+- `.github/workflows/release-central.yml`
+  - release on tags matching `v*`
+  - publishes to Maven Central
+  - creates a GitHub Release and attaches built jars
+
+For Maven Central release workflow, configure repository secrets:
+- `OSSRH_USERNAME`
+- `OSSRH_TOKEN`
+- `GPG_PRIVATE_KEY`
+- `GPG_PASSPHRASE`
+
+To release, push a tag like:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+## Quality Gates
+
+Run these locally to match CI:
+
+```bash
+mvn spotless:check
+mvn test
+mvn -Pmutation pitest:mutationCoverage
+```
