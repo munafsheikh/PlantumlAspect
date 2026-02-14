@@ -32,18 +32,21 @@ class PlantumlAopIntegrationTest {
       service.createInvoice("inv-1");
       service.payInvoice("inv-1");
 
-      Path seq1 = tempDir.resolve("DemoServiceImpl_createInvoice_seqOne_SD.puml");
+      // Deep trace mode generates files with _DeepTrace_SD.puml suffix
+      Path seq1 = tempDir.resolve("DemoServiceImpl_createInvoice_seqOne_DeepTrace_SD.puml");
       Path cls1 = tempDir.resolve("DemoServiceImpl_createInvoice_seqOne_ClassDiagram.puml");
-      Path seq2 = tempDir.resolve("DemoServiceImpl_payInvoice_seqTwo_SD.puml");
+      Path seq2 = tempDir.resolve("DemoServiceImpl_payInvoice_seqTwo_DeepTrace_SD.puml");
       Path cls2 = tempDir.resolve("DemoServiceImpl_payInvoice_seqTwo_ClassDiagram.puml");
 
-      assertTrue(Files.exists(seq1), "first sequence diagram should exist");
+      assertTrue(Files.exists(seq1), "first deep trace sequence diagram should exist");
       assertTrue(Files.exists(cls1), "first class diagram should exist");
-      assertTrue(Files.exists(seq2), "second sequence diagram should exist");
+      assertTrue(Files.exists(seq2), "second deep trace sequence diagram should exist");
       assertTrue(Files.exists(cls2), "second class diagram should exist");
 
       String seqContent = Files.readString(seq1);
       assertTrue(seqContent.contains("@startuml"), "sequence output should be PlantUML content");
+      assertTrue(
+          seqContent.contains("Deep Trace"), "sequence diagram should indicate deep trace mode");
     }
   }
 
