@@ -9,6 +9,7 @@ import com.virtrics.ai.plantuml.aop.annotation.Plantuml;
 import com.virtrics.ai.plantuml.aop.aspect.PlantUmlAspect;
 import com.virtrics.ai.plantuml.aop.config.PlantumlAopProperties;
 import com.virtrics.ai.plantuml.aop.service.PlantUMLDiagramService;
+import com.virtrics.ai.plantuml.aop.service.RuntimeTracePlantUMLGenerator;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -104,8 +105,14 @@ class PlantumlAopIntegrationTest {
         PlantUMLDiagramService.class,
         () -> new PlantUMLDiagramService(context.getBean(PlantumlAopProperties.class)));
     context.registerBean(
+        RuntimeTracePlantUMLGenerator.class,
+        () -> new RuntimeTracePlantUMLGenerator(context.getBean(PlantumlAopProperties.class)));
+    context.registerBean(
         PlantUmlAspect.class,
-        () -> new PlantUmlAspect(context.getBean(PlantUMLDiagramService.class)));
+        () ->
+            new PlantUmlAspect(
+                context.getBean(PlantUMLDiagramService.class),
+                context.getBean(RuntimeTracePlantUMLGenerator.class)));
     context.registerBean(DemoService.class, DemoServiceImpl::new);
     context.refresh();
     return context;
