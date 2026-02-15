@@ -22,6 +22,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 class PlantumlAopIntegrationTest {
 
+  // Integration test demonstrating deep trace sequence diagram generation
   @Test
   void annotatedMethodsGenerateTwoClassAndTwoSequenceDiagrams(@TempDir Path tempDir)
       throws IOException {
